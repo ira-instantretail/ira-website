@@ -48,9 +48,9 @@ function submit(e){const f=e.target,type=F[f?.id];if(!type)return;
  let finished=false;
  const finish=(ok,message)=>{if(finished)return;finished=true;window.removeEventListener('message',receive);clearTimeout(timer);post.remove();setTimeout(()=>frame.remove(),1500);btn.disabled=false;btn.textContent=old;
  if(ok){f.reset();notice(f,'Thank you! Your response has been saved successfully.',false)}else notice(f,message||'We could not confirm your response. Please try again.',true)};
- const receive=(ev)=>{if(ev.source!==frame.contentWindow)return;const data=ev.data;if(!data||data.source!=='IRA_FORMS'||data.nonce!==nonce)return;finish(data.success, data.error||'Submission failed. Please try again.')};
+ const receive=(ev)=>{if(!/^https:\/\/(?:script\.google(?:usercontent)?\.com)(?::443)?$/.test(ev.origin))return;const data=ev.data;if(!data||data.source!=='IRA_FORMS'||data.nonce!==nonce)return;finish(data.success, data.error||'Submission failed. Please try again.')};
  window.addEventListener('message',receive);
- const timer=setTimeout(()=>finish(false,'No confirmation was received. Please check the Google Form Responses tab before retrying to avoid duplicates.'),25000);
+ const timer=setTimeout(()=>finish(false,'Google did not return a confirmation. Check Google Forms Responses before retrying to avoid duplicates.'),30000);
  try{post.submit()}catch(err){finish(false,'Unable to submit: '+err.message)}
 }
 document.addEventListener('submit',submit,true);

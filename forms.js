@@ -48,7 +48,20 @@ function submit(e){const f=e.target,type=F[f?.id];if(!type)return;
  let finished=false;
  const finish=(ok,message)=>{if(finished)return;finished=true;window.removeEventListener('message',receive);clearTimeout(timer);post.remove();setTimeout(()=>frame.remove(),1500);btn.disabled=false;btn.textContent=old;
  if(ok){f.reset();notice(f,'Thank you! Your response has been saved successfully.',false)}else notice(f,message||'We could not confirm your response. Please try again.',true)};
- const receive=(ev)=>{if(!/^https:\/\/(?:script\.google\.com|(?:[a-z0-9-]+\.)*googleusercontent\.com)(?::443)?$/i.test(ev.origin))return;const data=ev.data;if(!data||data.source!=='IRA_FORMS'||data.nonce!==nonce)return;finish(data.success, data.error||'Submission failed. Please try again.')};
+const receive=(ev)=>{
+  const allowedOrigin =
+    /^https:\/\/script\.google\.com$/i.test(ev.origin) ||
+    /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com$/i.test(ev.origin) ||
+    /^https:\/\/[a-z0-9.-]+-script\.googleusercontent\.com$/i.test(ev.origin);
+
+  if(!allowedOrigin) return;
+
+  const data=ev.data;
+  if(!data || data.source!=='IRA_FORMS' || data.nonce!==nonce) return;
+
+  finish(data.success===true, data.error||'Submission failed. Please try again.');
+};
+
  window.addEventListener('message',receive);
  const timer=setTimeout(()=>finish(false,'Google did not return a confirmation. Check Google Forms Responses before retrying to avoid duplicates.'),30000);
  try{post.submit()}catch(err){finish(false,'Unable to submit: '+err.message)}

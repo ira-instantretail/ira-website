@@ -7,3 +7,15 @@
 /* V3 mobile polish */
 @media(max-width:767px){html,body{max-width:100%;overflow-x:clip}img,video,iframe{max-width:100%;height:auto}button,a,input,select,textarea{touch-action:manipulation}input,select,textarea{max-width:100%;font-size:16px} .container{max-width:100%}}
 @media(max-width:390px){h1,h2,h3{overflow-wrap:break-word} .ira-spin-dots{flex-wrap:wrap}}
+
+/* IRA accessibility: comfortable interactive hit areas while retaining the dot appearance. */
+.ira-spin-dots button,.ira-progress-dots button {
+  width:24px; height:24px; border:8px solid transparent;
+  background-clip:padding-box; box-sizing:border-box; cursor:pointer;
+}
+.menu-toggle {min-width:44px;min-height:44px;cursor:pointer}
+.ira-spin-controls button,.ira-portal-arrows button {min-width:44px;min-height:44px}
+@media (max-width:767px) {
+ .navlinks a {display:flex;align-items:center;min-height:44px}
+ .ira-world-tab {min-height:44px}
+}
